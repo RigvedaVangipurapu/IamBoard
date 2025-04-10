@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - Aesthetic Moodboard Creator{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4 mb-4">Create Beautiful Moodboards</h1>
+    <p class="lead mb-4">Express your creativity with our easy-to-use moodboard creator. Perfect for inspiration, planning, and sharing your aesthetic vision.</p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a href="{{ url_for('create_moodboard') }}" class="btn btn-primary btn-lg px-4 gap-3">
+            <i class="fas fa-plus-circle"></i> Create Moodboard
+        </a>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-images fa-3x mb-3 text-primary"></i>
+                <h3>Upload Images</h3>
+                <p>Add your favorite images to create the perfect moodboard</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-paint-brush fa-3x mb-3 text-primary"></i>
+                <h3>Customize Layout</h3>
+                <p>Choose from different layouts to match your style</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-share-alt fa-3x mb-3 text-primary"></i>
+                <h3>Share & Save</h3>
+                <p>Save your creations and share them with others</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

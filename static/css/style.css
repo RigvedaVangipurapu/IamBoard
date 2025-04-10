@@ -1,0 +1,91 @@
+/* Custom styles for the moodboard creator */
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.navbar-brand i {
+    margin-right: 8px;
+    color: #6c5ce7;
+}
+
+.btn-primary {
+    background-color: #6c5ce7;
+    border-color: #6c5ce7;
+}
+
+.btn-primary:hover {
+    background-color: #5b4bc4;
+    border-color: #5b4bc4;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.color-theme-options {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+}
+
+.moodboard-container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.moodboard-header {
+    margin-bottom: 2rem;
+}
+
+.moodboard-header h1 {
+    color: #2d3436;
+    font-weight: 600;
+}
+
+.moodboard-header .lead {
+    color: #636e72;
+}
+
+/* Print styles */
+@media print {
+    .navbar, .footer, .btn {
+        display: none !important;
+    }
+    
+    .moodboard-container {
+        box-shadow: none;
+        padding: 0;
+    }
+    
+    .moodboard-grid {
+        break-inside: avoid;
+    }
+} 

@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Aesthetic Moodboard Creator{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500&family=Dancing+Script:wght@400;500;600&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+    .moodboard-container {
+        background-color: #fff5f7;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+    }
+
+    .moodboard-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .moodboard-header h1 {
+        font-family: 'Playfair Display', serif;
+        color: #ff69b4;
+        font-weight: 600;
+    }
+
+    .moodboard-header .lead {
+        font-family: 'Poppins', sans-serif;
+        color: #ff69b4;
+    }
+
+    .moodboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+        min-height: 500px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .moodboard-item {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: move;
+    }
+
+    .moodboard-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-item {
+        position: absolute;
+        padding: 1rem;
+        border-radius: 8px;
+        cursor: move;
+        user-select: none;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-palette {
+        display: flex;
+        gap: 0.5rem;
+        margin: 1rem 0;
+        padding: 1rem;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-swatch {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .color-swatch:hover {
+        transform: scale(1.1);
+    }
+
+    .toolbar {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .toolbar button {
+        margin: 0.5rem;
+        border: none;
+        background: none;
+        color: #ff69b4;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .toolbar button:hover {
+        transform: scale(1.1);
+    }
+
+    .font-options {
+        display: none;
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .font-option {
+        padding: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .font-option:hover {
+        background-color: #fff5f7;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="moodboard-container">
+        <div class="moodboard-header">
+            <h1>{{ title }}</h1>
+            {% if description %}
+            <p class="lead">{{ description }}</p>
+            {% endif %}
+        </div>
+
+        <div class="color-palette">
+            {% for palette in color_palettes %}
+                {% for color in palette %}
+                <div class="color-swatch" style="background-color: {{ color }}"></div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <div class="moodboard-grid" id="moodboardGrid">
+            {% for image in images %}
+            <div class="moodboard-item" draggable="true">
+                <img src="{{ url_for('uploaded_file', filename=image) }}" alt="Moodboard image">
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="toolbar">
+            <button onclick="addText()" title="Add Text">
+                <i class="fas fa-font fa-2x"></i>
+            </button>
+            <button onclick="toggleFontOptions()" title="Font Options">
+                <i class="fas fa-text-height fa-2x"></i>
+            </button>
+            <div class="font-options" id="fontOptions">
+                <div class="font-option" style="font-family: 'Playfair Display', serif" onclick="changeFont('Playfair Display')">Playfair Display</div>
+                <div class="font-option" style="font-family: 'Dancing Script', cursive" onclick="changeFont('Dancing Script')">Dancing Script</div>
+                <div class="font-option" style="font-family: 'Parisienne', cursive" onclick="changeFont('Parisienne')">Parisienne</div>
+                <div class="font-option" style="font-family: 'Poppins', sans-serif" onclick="changeFont('Poppins')">Poppins</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize drag and drop
+    const grid = document.getElementById('moodboardGrid');
+    new Sortable(grid, {
+        animation: 150,
+        ghostClass: 'sortable-ghost'
+    });
+
+    // Color palette click handler
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.addEventListener('click', function() {
+            const color = this.style.backgroundColor;
+            document.querySelectorAll('.text-item').forEach(text => {
+                text.style.color = color;
+            });
+        });
+    });
+});
+
+let currentFont = 'Playfair Display';
+
+function addText() {
+    const textItem = document.createElement('div');
+    textItem.className = 'text-item';
+    textItem.contentEditable = true;
+    textItem.style.fontFamily = currentFont;
+    textItem.style.color = '#ff69b4';
+    textItem.textContent = 'Double click to edit text';
+    
+    textItem.addEventListener('dblclick', function() {
+        this.contentEditable = true;
+        this.focus();
+    });
+
+    textItem.addEventListener('blur', function() {
+        this.contentEditable = false;
+    });
+
+    document.getElementById('moodboardGrid').appendChild(textItem);
+    new Sortable(textItem.parentElement, {
+        animation: 150,
+        ghostClass: 'sortable-ghost'
+    });
+}
+
+function toggleFontOptions() {
+    const options = document.getElementById('fontOptions');
+    options.style.display = options.style.display === 'block' ? 'none' : 'block';
+}
+
+function changeFont(font) {
+    currentFont = font;
+    document.querySelectorAll('.text-item').forEach(text => {
+        text.style.fontFamily = font;
+    });
+    document.getElementById('fontOptions').style.display = 'none';
+}
+
+// Save arrangement
+function saveArrangement() {
+    const items = Array.from(document.querySelectorAll('.moodboard-item, .text-item')).map(item => ({
+        type: item.classList.contains('text-item') ? 'text' : 'image',
+        content: item.classList.contains('text-item') ? item.textContent : item.querySelector('img').src,
+        position: {
+            x: item.offsetLeft,
+            y: item.offsetTop
+        }
+    }));
+
+    fetch('/save-arrangement', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(items)
+    });
+}
+</script>
+{% endblock %} 

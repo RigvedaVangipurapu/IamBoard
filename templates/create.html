@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Create Moodboard - Aesthetic Moodboard Creator{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+    .create-container {
+        background-color: #fff5f7;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+    }
+
+    .drop-zone {
+        border: 2px dashed #ffb6c1;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        background-color: rgba(255, 182, 193, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .drop-zone:hover {
+        background-color: rgba(255, 182, 193, 0.2);
+    }
+
+    .drop-zone.dragover {
+        background-color: rgba(255, 182, 193, 0.3);
+        border-color: #ff69b4;
+    }
+
+    .preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .image-preview {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #ffb6c1;
+        border-radius: 10px;
+        padding: 0.8rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #ff69b4;
+        box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #ff69b4;
+        border-color: #ff69b4;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        font-weight: 500;
+    }
+
+    .btn-primary:hover {
+        background-color: #ff1493;
+        border-color: #ff1493;
+    }
+
+    h2 {
+        font-family: 'Playfair Display', serif;
+        color: #ff69b4;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-family: 'Poppins', sans-serif;
+        color: #ff69b4;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="create-container">
+                <h2 class="text-center">Create Your Aesthetic Moodboard</h2>
+                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="mb-4">
+                        <label for="title" class="form-label">Moodboard Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                        <div class="invalid-feedback">
+                            Please provide a title for your moodboard.
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Upload Images</label>
+                        <div class="drop-zone" id="dropZone">
+                            <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: #ff69b4;"></i>
+                            <p class="mb-0">Drag & drop your images here or click to browse</p>
+                            <input type="file" class="d-none" id="images" name="images" multiple accept="image/*" required>
+                        </div>
+                        <div class="preview-container" id="previewContainer"></div>
+                        <div class="invalid-feedback">
+                            Please upload at least one image.
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-magic"></i> Create Moodboard
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('images');
+    const previewContainer = document.getElementById('previewContainer');
+
+    // Handle drag and drop
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    });
+
+    // Handle click to upload
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        for (const file of files) {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-preview';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        fileInput.files = files;
+    }
+});
+</script>
+{% endblock %} 
