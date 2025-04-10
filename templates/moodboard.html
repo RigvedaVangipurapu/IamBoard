@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ title }} - Aesthetic Moodboard Creator{% endblock %}
+{% block title %}{{ title }} - I am Board{% endblock %}
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500&family=Dancing+Script:wght@400;500;600&family=Parisienne&display=swap" rel="stylesheet">
@@ -28,30 +28,62 @@
         color: #ff69b4;
     }
 
-    .moodboard-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-        padding: 1rem;
-        min-height: 500px;
+    .moodboard-canvas {
+        position: relative;
+        min-height: 600px;
         background-color: white;
         border-radius: 15px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin: 2rem 0;
+        overflow: hidden;
     }
 
     .moodboard-item {
-        position: relative;
-        border-radius: 10px;
-        overflow: hidden;
+        position: absolute;
         cursor: move;
+        touch-action: none;
+        user-select: none;
+        transform-origin: center;
+        display: inline-block;
+        z-index: 1;
+    }
+
+    .moodboard-item.dragging {
+        z-index: 100;
     }
 
     .moodboard-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        max-width: 100%;
+        height: auto;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .resize-handle {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: #ff69b4;
+        border-radius: 50%;
+        z-index: 2;
+    }
+
+    .resize-handle.tl { top: -10px; left: -10px; cursor: nw-resize; }
+    .resize-handle.tr { top: -10px; right: -10px; cursor: ne-resize; }
+    .resize-handle.bl { bottom: -10px; left: -10px; cursor: sw-resize; }
+    .resize-handle.br { bottom: -10px; right: -10px; cursor: se-resize; }
+
+    .rotate-handle {
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 20px;
+        background-color: #ff69b4;
+        border-radius: 50%;
+        cursor: grab;
+        z-index: 2;
     }
 
     .text-item {
@@ -62,6 +94,7 @@
         user-select: none;
         background-color: rgba(255, 255, 255, 0.9);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1;
     }
 
     .color-palette {
@@ -151,10 +184,15 @@
             {% endfor %}
         </div>
 
-        <div class="moodboard-grid" id="moodboardGrid">
+        <div class="moodboard-canvas" id="moodboardCanvas">
             {% for image in images %}
-            <div class="moodboard-item" draggable="true">
+            <div class="moodboard-item" style="width: 200px; left: 50px; top: 50px;">
                 <img src="{{ url_for('uploaded_file', filename=image) }}" alt="Moodboard image">
+                <div class="resize-handle tl"></div>
+                <div class="resize-handle tr"></div>
+                <div class="resize-handle bl"></div>
+                <div class="resize-handle br"></div>
+                <div class="rotate-handle"></div>
             </div>
             {% endfor %}
         </div>
@@ -178,14 +216,73 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize drag and drop
-    const grid = document.getElementById('moodboardGrid');
-    new Sortable(grid, {
-        animation: 150,
-        ghostClass: 'sortable-ghost'
+    // Initialize draggable elements
+    interact('.moodboard-item')
+        .draggable({
+            inertia: true,
+            modifiers: [
+                interact.modifiers.restrictRect({
+                    restriction: 'parent',
+                    endOnly: true
+                })
+            ],
+            autoScroll: true,
+            listeners: {
+                move: dragMoveListener,
+                start: function (event) {
+                    event.target.classList.add('dragging');
+                },
+                end: function (event) {
+                    event.target.classList.remove('dragging');
+                }
+            }
+        })
+        .resizable({
+            edges: { left: true, right: true, bottom: true, top: true },
+            restrictEdges: {
+                outer: 'parent',
+                endOnly: true
+            },
+            restrictSize: {
+                min: { width: 100, height: 100 }
+            },
+            inertia: true
+        })
+        .on('resizemove', function (event) {
+            let target = event.target;
+            let x = (parseFloat(target.getAttribute('data-x')) || 0);
+            let y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+            // Update element size
+            target.style.width = event.rect.width + 'px';
+            target.style.height = event.rect.height + 'px';
+
+            // Update position
+            x += event.deltaRect.left;
+            y += event.deltaRect.top;
+
+            target.style.transform = `translate(${x}px, ${y}px)`;
+            target.setAttribute('data-x', x);
+            target.setAttribute('data-y', y);
+        });
+
+    // Initialize rotation
+    interact('.rotate-handle').draggable({
+        onmove: function (event) {
+            const target = event.target.parentElement;
+            const rect = target.getBoundingClientRect();
+            const center = {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+
+            const angle = Math.atan2(event.clientY - center.y, event.clientX - center.x);
+            const degrees = angle * 180 / Math.PI;
+
+            target.style.transform = `rotate(${degrees}deg)`;
+        }
     });
 
     // Color palette click handler
@@ -198,6 +295,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function dragMoveListener(event) {
+    let target = event.target;
+    let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+    let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+    target.style.transform = `translate(${x}px, ${y}px)`;
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+}
 
 let currentFont = 'Playfair Display';
 
@@ -218,10 +325,19 @@ function addText() {
         this.contentEditable = false;
     });
 
-    document.getElementById('moodboardGrid').appendChild(textItem);
-    new Sortable(textItem.parentElement, {
-        animation: 150,
-        ghostClass: 'sortable-ghost'
+    document.getElementById('moodboardCanvas').appendChild(textItem);
+    
+    // Make text items draggable
+    interact(textItem).draggable({
+        inertia: true,
+        modifiers: [
+            interact.modifiers.restrictRect({
+                restriction: 'parent',
+                endOnly: true
+            })
+        ],
+        autoScroll: true,
+        listeners: { move: dragMoveListener }
     });
 }
 
@@ -236,26 +352,6 @@ function changeFont(font) {
         text.style.fontFamily = font;
     });
     document.getElementById('fontOptions').style.display = 'none';
-}
-
-// Save arrangement
-function saveArrangement() {
-    const items = Array.from(document.querySelectorAll('.moodboard-item, .text-item')).map(item => ({
-        type: item.classList.contains('text-item') ? 'text' : 'image',
-        content: item.classList.contains('text-item') ? item.textContent : item.querySelector('img').src,
-        position: {
-            x: item.offsetLeft,
-            y: item.offsetTop
-        }
-    }));
-
-    fetch('/save-arrangement', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(items)
-    });
 }
 </script>
 {% endblock %} 
