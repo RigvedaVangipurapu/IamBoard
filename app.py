@@ -28,6 +28,10 @@ def get_color_palette(image_path, color_count=5):
 def index():
     return render_template('index.html')
 
+@app.route('/layouts')
+def layouts():
+    return render_template('layouts.html')
+
 @app.route('/create', methods=['GET', 'POST'])
 def create_moodboard():
     if request.method == 'POST':
@@ -49,14 +53,29 @@ def create_moodboard():
         # Get moodboard title and description
         title = request.form.get('title', 'Untitled Moodboard')
         description = request.form.get('description', '')
+        layout = request.form.get('layout', 'simple-work')
         
         return render_template('moodboard.html', 
                              images=images,
                              color_palettes=color_palettes,
                              title=title,
-                             description=description)
+                             description=description,
+                             layout=layout)
     
     return render_template('create.html')
+
+@app.route('/moodboard/<layout>')
+def moodboard(layout):
+    # Get any existing images and color palettes from the session or database
+    images = []
+    color_palettes = []
+    
+    return render_template('moodboard.html',
+                         images=images,
+                         color_palettes=color_palettes,
+                         title=f"{layout.replace('-', ' ').title()} Moodboard",
+                         description="",
+                         layout=layout)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

@@ -5,6 +5,7 @@
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500&family=Dancing+Script:wght@400;500;600&family=Parisienne&display=swap" rel="stylesheet">
 <style>
+    /* Base styles */
     .moodboard-container {
         background-color: #fff5f7;
         border-radius: 20px;
@@ -38,6 +39,53 @@
         overflow: hidden;
     }
 
+    /* Layout-specific styles */
+    .layout-simple-work .moodboard-canvas {
+        background-color: #f8f9fa;
+        background-image: linear-gradient(45deg, #e9ecef 25%, transparent 25%),
+                        linear-gradient(-45deg, #e9ecef 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #e9ecef 75%),
+                        linear-gradient(-45deg, transparent 75%, #e9ecef 75%);
+        background-size: 20px 20px;
+    }
+
+    .layout-aesthetic-travel .moodboard-canvas {
+        background-color: #e3f2fd;
+        background-image: linear-gradient(45deg, #bbdefb 25%, transparent 25%),
+                        linear-gradient(-45deg, #bbdefb 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #bbdefb 75%),
+                        linear-gradient(-45deg, transparent 75%, #bbdefb 75%);
+        background-size: 20px 20px;
+    }
+
+    .layout-mealprep .moodboard-canvas {
+        background-color: #f3e5f5;
+        background-image: linear-gradient(45deg, #e1bee7 25%, transparent 25%),
+                        linear-gradient(-45deg, #e1bee7 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #e1bee7 75%),
+                        linear-gradient(-45deg, transparent 75%, #e1bee7 75%);
+        background-size: 20px 20px;
+    }
+
+    .layout-workout .moodboard-canvas {
+        background-color: #e8f5e9;
+        background-image: linear-gradient(45deg, #c8e6c9 25%, transparent 25%),
+                        linear-gradient(-45deg, #c8e6c9 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #c8e6c9 75%),
+                        linear-gradient(-45deg, transparent 75%, #c8e6c9 75%);
+        background-size: 20px 20px;
+    }
+
+    .layout-chill .moodboard-canvas {
+        background-color: #fff3e0;
+        background-image: linear-gradient(45deg, #ffe0b2 25%, transparent 25%),
+                        linear-gradient(-45deg, #ffe0b2 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #ffe0b2 75%),
+                        linear-gradient(-45deg, transparent 75%, #ffe0b2 75%);
+        background-size: 20px 20px;
+    }
+
+    /* Rest of the existing styles */
     .moodboard-item {
         position: absolute;
         cursor: move;
@@ -163,12 +211,31 @@
     .font-option:hover {
         background-color: #fff5f7;
     }
+
+    .color-picker-container {
+        display: none;
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-picker-container input[type="color"] {
+        width: 100%;
+        height: 40px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="moodboard-container">
+    <div class="moodboard-container layout-{{ layout }}">
         <div class="moodboard-header">
             <h1>{{ title }}</h1>
             {% if description %}
@@ -204,11 +271,17 @@
             <button onclick="toggleFontOptions()" title="Font Options">
                 <i class="fas fa-text-height fa-2x"></i>
             </button>
+            <button onclick="toggleColorPicker()" title="Background Color">
+                <i class="fas fa-palette fa-2x"></i>
+            </button>
             <div class="font-options" id="fontOptions">
                 <div class="font-option" style="font-family: 'Playfair Display', serif" onclick="changeFont('Playfair Display')">Playfair Display</div>
                 <div class="font-option" style="font-family: 'Dancing Script', cursive" onclick="changeFont('Dancing Script')">Dancing Script</div>
                 <div class="font-option" style="font-family: 'Parisienne', cursive" onclick="changeFont('Parisienne')">Parisienne</div>
                 <div class="font-option" style="font-family: 'Poppins', sans-serif" onclick="changeFont('Poppins')">Poppins</div>
+            </div>
+            <div class="color-picker-container" id="colorPicker">
+                <input type="color" id="bgColorPicker" value="#ffffff" onchange="changeBackgroundColor(this.value)">
             </div>
         </div>
     </div>
@@ -352,6 +425,19 @@ function changeFont(font) {
         text.style.fontFamily = font;
     });
     document.getElementById('fontOptions').style.display = 'none';
+}
+
+function toggleColorPicker() {
+    const colorPicker = document.getElementById('colorPicker');
+    const fontOptions = document.getElementById('fontOptions');
+    fontOptions.style.display = 'none';
+    colorPicker.style.display = colorPicker.style.display === 'block' ? 'none' : 'block';
+}
+
+function changeBackgroundColor(color) {
+    const canvas = document.getElementById('moodboardCanvas');
+    canvas.style.backgroundColor = color;
+    canvas.style.backgroundImage = 'none';
 }
 </script>
 {% endblock %} 

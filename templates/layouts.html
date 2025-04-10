@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Choose Layout - I am Board{% endblock %}
+
+{% block extra_css %}
+<style>
+    .layouts-container {
+        padding: 2rem;
+    }
+
+    .layouts-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .layouts-header h1 {
+        font-family: 'Playfair Display', serif;
+        color: #ff69b4;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .layouts-header p {
+        font-family: 'Poppins', sans-serif;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .layouts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .layout-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    .layout-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .layout-preview {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .layout-info {
+        padding: 1.5rem;
+    }
+
+    .layout-info h3 {
+        font-family: 'Playfair Display', serif;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .layout-info p {
+        font-family: 'Poppins', sans-serif;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .back-button {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .back-button a {
+        color: #ff69b4;
+        text-decoration: none;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="layouts-container">
+    <div class="layouts-header">
+        <h1>Choose Your Layout</h1>
+        <p>Select a template that best matches your style and needs. Each layout is designed for specific purposes and can be customized to your liking.</p>
+    </div>
+
+    <div class="layouts-grid">
+        <div class="layout-card" onclick="window.location.href='{{ url_for('moodboard', layout='simple-work') }}'">
+            <div class="layout-preview" style="background-color: #f8f9fa; background-image: linear-gradient(45deg, #e9ecef 25%, transparent 25%), linear-gradient(-45deg, #e9ecef 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e9ecef 75%), linear-gradient(-45deg, transparent 75%, #e9ecef 75%); background-size: 20px 20px;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <i class="fas fa-briefcase fa-3x" style="color: #6c757d;"></i>
+                </div>
+            </div>
+            <div class="layout-info">
+                <h3>Simple Work Moodboard</h3>
+                <p>A clean, professional layout perfect for work projects and presentations.</p>
+            </div>
+        </div>
+
+        <div class="layout-card" onclick="window.location.href='{{ url_for('moodboard', layout='aesthetic-travel') }}'">
+            <div class="layout-preview" style="background-color: #e3f2fd; background-image: linear-gradient(45deg, #bbdefb 25%, transparent 25%), linear-gradient(-45deg, #bbdefb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #bbdefb 75%), linear-gradient(-45deg, transparent 75%, #bbdefb 75%); background-size: 20px 20px;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <i class="fas fa-plane fa-3x" style="color: #1976d2;"></i>
+                </div>
+            </div>
+            <div class="layout-info">
+                <h3>Aesthetic Travel Moodboard</h3>
+                <p>Capture your travel memories and dream destinations in style.</p>
+            </div>
+        </div>
+
+        <div class="layout-card" onclick="window.location.href='{{ url_for('moodboard', layout='mealprep') }}'">
+            <div class="layout-preview" style="background-color: #f3e5f5; background-image: linear-gradient(45deg, #e1bee7 25%, transparent 25%), linear-gradient(-45deg, #e1bee7 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e1bee7 75%), linear-gradient(-45deg, transparent 75%, #e1bee7 75%); background-size: 20px 20px;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <i class="fas fa-utensils fa-3x" style="color: #7b1fa2;"></i>
+                </div>
+            </div>
+            <div class="layout-info">
+                <h3>Mealprep Moodboard</h3>
+                <p>Plan your meals and track your nutrition with this food-focused layout.</p>
+            </div>
+        </div>
+
+        <div class="layout-card" onclick="window.location.href='{{ url_for('moodboard', layout='workout') }}'">
+            <div class="layout-preview" style="background-color: #e8f5e9; background-image: linear-gradient(45deg, #c8e6c9 25%, transparent 25%), linear-gradient(-45deg, #c8e6c9 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #c8e6c9 75%), linear-gradient(-45deg, transparent 75%, #c8e6c9 75%); background-size: 20px 20px;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <i class="fas fa-dumbbell fa-3x" style="color: #2e7d32;"></i>
+                </div>
+            </div>
+            <div class="layout-info">
+                <h3>Workout Moodboard</h3>
+                <p>Track your fitness journey and plan your workouts with this dynamic layout.</p>
+            </div>
+        </div>
+
+        <div class="layout-card" onclick="window.location.href='{{ url_for('moodboard', layout='chill') }}'">
+            <div class="layout-preview" style="background-color: #fff3e0; background-image: linear-gradient(45deg, #ffe0b2 25%, transparent 25%), linear-gradient(-45deg, #ffe0b2 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ffe0b2 75%), linear-gradient(-45deg, transparent 75%, #ffe0b2 75%); background-size: 20px 20px;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                    <i class="fas fa-couch fa-3x" style="color: #e65100;"></i>
+                </div>
+            </div>
+            <div class="layout-info">
+                <h3>Chill Moodboard</h3>
+                <p>A relaxed layout for your downtime, hobbies, and personal projects.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-button">
+        <a href="{{ url_for('index') }}">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %} 
