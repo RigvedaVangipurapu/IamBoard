@@ -87,5 +87,21 @@ def save_arrangement():
     # Here you would typically save the arrangement to a database
     return jsonify({'status': 'success'})
 
+@app.route('/add-images', methods=['POST'])
+def add_images():
+    images = []
+    for file in request.files.getlist('images'):
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            unique_filename = f"{uuid.uuid4()}_{filename}"
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+            file.save(filepath)
+            images.append(unique_filename)
+    
+    return jsonify({
+        'success': True,
+        'images': images
+    })
+
 if __name__ == '__main__':
     app.run(debug=True) 

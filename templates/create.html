@@ -44,6 +44,45 @@
         object-fit: cover;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .remove-image {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #ff69b4;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .remove-image:hover {
+        background-color: #ff69b4;
+        color: white;
+    }
+
+    .add-more-btn {
+        background-color: transparent;
+        border: 2px solid #ff69b4;
+        color: #ff69b4;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .add-more-btn:hover {
+        background-color: #ff69b4;
+        color: white;
     }
 
     .form-control, .form-select {
@@ -112,6 +151,9 @@
                             <input type="file" class="d-none" id="images" name="images" multiple accept="image/*" required>
                         </div>
                         <div class="preview-container" id="previewContainer"></div>
+                        <button type="button" class="add-more-btn" id="addMoreBtn">
+                            <i class="fas fa-plus"></i> Add More Images
+                        </button>
                         <div class="invalid-feedback">
                             Please upload at least one image.
                         </div>
@@ -135,6 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('images');
     const previewContainer = document.getElementById('previewContainer');
+    const addMoreBtn = document.getElementById('addMoreBtn');
+    let currentFiles = new DataTransfer();
 
     // Handle drag and drop
     dropZone.addEventListener('dragover', (e) => {
@@ -162,20 +206,44 @@ document.addEventListener('DOMContentLoaded', function() {
         handleFiles(e.target.files);
     });
 
+    // Handle add more images button
+    addMoreBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
     function handleFiles(files) {
         for (const file of files) {
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.style.position = 'relative';
+                    
                     const img = document.createElement('img');
                     img.src = e.target.result;
                     img.className = 'image-preview';
-                    previewContainer.appendChild(img);
+                    
+                    const removeBtn = document.createElement('div');
+                    removeBtn.className = 'remove-image';
+                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    removeBtn.onclick = () => {
+                        imgContainer.remove();
+                        updateFileList();
+                    };
+                    
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(removeBtn);
+                    previewContainer.appendChild(imgContainer);
                 };
                 reader.readAsDataURL(file);
+                currentFiles.items.add(file);
             }
         }
-        fileInput.files = files;
+        updateFileList();
+    }
+
+    function updateFileList() {
+        fileInput.files = currentFiles.files;
     }
 });
 </script>
