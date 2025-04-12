@@ -198,13 +198,18 @@
     .upload-form {
         display: none;
         position: absolute;
-        bottom: 100%;
-        right: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         background-color: white;
-        padding: 1rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        width: 200px;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+
+    .upload-form.active {
+        display: block;
     }
 
     .upload-form input[type="file"] {
@@ -213,28 +218,77 @@
 
     .upload-form label {
         display: block;
-        padding: 0.5rem;
+        padding: 1rem;
+        background-color: #ff69b4;
+        color: white;
+        border-radius: 8px;
         text-align: center;
         cursor: pointer;
-        color: #ff69b4;
-        border: 2px dashed #ffb6c1;
+        margin-bottom: 1rem;
+    }
+
+    .upload-form button {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: #ff69b4;
+        color: white;
+        border: none;
         border-radius: 8px;
-        transition: all 0.3s ease;
+        cursor: pointer;
     }
 
-    .upload-form label:hover {
-        background-color: rgba(255, 182, 193, 0.1);
+    .upload-form button:hover {
+        background-color: #ff1493;
     }
 
-    .font-options {
-        display: none;
+    .drag-over {
+        border: 2px dashed #ff69b4;
+    }
+
+    .canvas-instructions {
         position: absolute;
-        bottom: 100%;
-        right: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #ff69b4;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .canvas-instructions.hidden {
+        display: none;
+    }
+
+    .color-picker-container {
+        display: none;
+        position: fixed;
+        bottom: 100px;
+        right: 80px;
         background-color: white;
         padding: 1rem;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+    }
+
+    .color-picker-container input[type="color"] {
+        width: 100%;
+        height: 40px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .font-options {
+        display: none;
+        position: fixed;
+        bottom: 100px;
+        right: 80px;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
     }
 
     .font-option {
@@ -246,521 +300,270 @@
     .font-option:hover {
         background-color: #fff5f7;
     }
-
-    .color-picker-container {
-        display: none;
-        position: absolute;
-        bottom: 100%;
-        right: 0;
-        background-color: white;
-        padding: 1rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .color-picker-container input[type="color"] {
-        width: 100%;
-        height: 40px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .sample-content-section {
-        margin: 20px 0;
-        padding: 20px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-    }
-
-    .sample-content-section h2 {
-        color: #333;
-        margin-bottom: 15px;
-        font-size: 1.5em;
-    }
-
-    .sample-content-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
-    }
-
-    .sample-item {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: transform 0.2s;
-    }
-
-    .sample-item:hover {
-        transform: translateY(-5px);
-    }
-
-    .sample-item img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-    }
-
-    .sample-text {
-        padding: 10px;
-        margin: 0;
-        font-size: 0.9em;
-        color: #666;
-    }
-
-    .template-sections {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-    }
-
-    .template-section {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-
-    .template-section h3 {
-        color: #ff69b4;
-        font-family: 'Playfair Display', serif;
-        margin-bottom: 10px;
-        font-size: 1.3em;
-    }
-
-    .template-description {
-        color: #666;
-        font-size: 0.95em;
-        margin-bottom: 15px;
-        line-height: 1.4;
-    }
-
-    .sample-content-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        margin-top: 15px;
-    }
-
-    .sample-item {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: transform 0.2s;
-    }
-
-    .sample-item:hover {
-        transform: translateY(-5px);
-    }
-
-    .sample-item img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-    }
-
-    .sample-text {
-        padding: 15px;
-        margin: 0;
-        font-size: 0.9em;
-        color: #666;
-        text-align: center;
-    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="moodboard-container layout-{{ layout }}">
-        <div class="moodboard-header">
-            <h1>{{ title }}</h1>
-            {% if description %}
-            <p class="lead">{{ description }}</p>
-            {% endif %}
-        </div>
+<div class="container moodboard-container">
+    <div class="moodboard-header">
+        <h1>{{ title }}</h1>
+        <p class="lead">Create your perfect moodboard</p>
+    </div>
 
-        <!-- Sample Content Section -->
-        <div class="sample-content-section">
-            <h2>Sample Moodboard Templates</h2>
-            <div class="template-sections">
-                <div class="template-section">
-                    <h3>Minimalist Design</h3>
-                    <p class="template-description">Clean lines, simple forms, and neutral colors for a sophisticated, uncluttered aesthetic.</p>
-                    <div class="sample-content-grid">
-                        <div class="sample-item">
-                            <img src="{{ url_for('static', filename='sample_images/minimalist/minimalist1.jpg') }}" alt="Minimalist Interior">
-                            <p class="sample-text">Serene interior spaces</p>
-                        </div>
-                        <div class="sample-item">
-                            <img src="{{ url_for('static', filename='sample_images/minimalist/minimalist2.jpg') }}" alt="Minimalist Architecture">
-                            <p class="sample-text">Geometric simplicity</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="template-section">
-                    <h3>Vibrant Colors</h3>
-                    <p class="template-description">Bold, energetic color combinations and dynamic patterns for impactful designs.</p>
-                    <div class="sample-content-grid">
-                        <div class="sample-item">
-                            <img src="{{ url_for('static', filename='sample_images/vibrant/vibrant1.jpg') }}" alt="Vibrant Abstract">
-                            <p class="sample-text">Abstract color play</p>
-                        </div>
-                        <div class="sample-item">
-                            <img src="{{ url_for('static', filename='sample_images/vibrant/vibrant2.jpg') }}" alt="Vibrant Patterns">
-                            <p class="sample-text">Dynamic compositions</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="template-section">
-                    <h3>Natural Elements</h3>
-                    <p class="template-description">Organic textures and earthy tones inspired by nature's beauty.</p>
-                    <div class="sample-content-grid">
-                        <div class="sample-item">
-                            <img src="{{ url_for('static', filename='sample_images/natural/natural1.jpg') }}" alt="Forest Scene">
-                            <p class="sample-text">Forest tranquility</p>
-                        </div>
-                        <div class="sample-item">
-                            <img src="{{ url_for('static', filename='sample_images/natural/natural2.jpg') }}" alt="Mountain Landscape">
-                            <p class="sample-text">Mountain majesty</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="template-section">
-                    <h3>Urban Style</h3>
-                    <p class="template-description">Modern architecture and city aesthetics for contemporary urban designs.</p>
-                    <div class="sample-content-grid">
-                        <div class="sample-item">
-                            <img src="{{ url_for('static', filename='sample_images/urban/urban1.jpg') }}" alt="City Skyline">
-                            <p class="sample-text">City perspectives</p>
-                        </div>
-                        <div class="sample-item">
-                            <img src="{{ url_for('static', filename='sample_images/urban/urban2.jpg') }}" alt="Urban Architecture">
-                            <p class="sample-text">Architectural details</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="moodboard-canvas" id="moodboardCanvas">
+        <div class="canvas-instructions" id="canvasInstructions">
+            <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+            <p>Upload images or add text, this is your space to speak your mind</p>
         </div>
+    </div>
 
-        <div class="color-palette">
-            {% for palette in color_palettes %}
-                {% for color in palette %}
-                <div class="color-swatch" style="background-color: {{ color }}"></div>
-                {% endfor %}
-            {% endfor %}
-        </div>
+    <div class="toolbar">
+        <button id="addImageBtn" title="Add Image">
+            <i class="fas fa-image fa-2x"></i>
+        </button>
+        <button id="addTextBtn" title="Add Text">
+            <i class="fas fa-font fa-2x"></i>
+        </button>
+        <button id="fontOptionsBtn" title="Font Options">
+            <i class="fas fa-text-height fa-2x"></i>
+        </button>
+        <button id="colorPickerBtn" title="Background Color">
+            <i class="fas fa-palette fa-2x"></i>
+        </button>
+        <button id="saveBtn" title="Save Moodboard">
+            <i class="fas fa-save fa-2x"></i>
+        </button>
+    </div>
 
-        <div class="moodboard-canvas" id="moodboardCanvas">
-            {% for image in images %}
-            <div class="moodboard-item" style="width: 200px; left: 50px; top: 50px;">
-                <img src="{{ url_for('uploaded_file', filename=image) }}" alt="Moodboard image">
-                <div class="resize-handle tl"></div>
-                <div class="resize-handle tr"></div>
-                <div class="resize-handle bl"></div>
-                <div class="resize-handle br"></div>
-                <div class="rotate-handle"></div>
-            </div>
-            {% endfor %}
-        </div>
+    <div class="upload-form" id="uploadForm">
+        <label for="imageUpload">
+            <i class="fas fa-cloud-upload-alt"></i> Choose Image
+        </label>
+        <input type="file" id="imageUpload" accept="image/*">
+        <button id="uploadBtn">Upload</button>
+    </div>
 
-        <div class="toolbar">
-            <button onclick="toggleUploadForm()" title="Add Images">
-                <i class="fas fa-image fa-2x"></i>
-            </button>
-            <div class="upload-form" id="uploadForm">
-                <form id="addImagesForm" enctype="multipart/form-data">
-                    <label for="additionalImages">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <span>Add More Images</span>
-                    </label>
-                    <input type="file" id="additionalImages" name="images" multiple accept="image/*">
-                </form>
-            </div>
-            <button onclick="addText()" title="Add Text">
-                <i class="fas fa-font fa-2x"></i>
-            </button>
-            <button onclick="toggleFontOptions()" title="Font Options">
-                <i class="fas fa-text-height fa-2x"></i>
-            </button>
-            <button onclick="toggleColorPicker()" title="Background Color">
-                <i class="fas fa-palette fa-2x"></i>
-            </button>
-            <div class="font-options" id="fontOptions">
-                <div class="font-option" style="font-family: 'Playfair Display', serif" onclick="changeFont('Playfair Display')">Playfair Display</div>
-                <div class="font-option" style="font-family: 'Dancing Script', cursive" onclick="changeFont('Dancing Script')">Dancing Script</div>
-                <div class="font-option" style="font-family: 'Parisienne', cursive" onclick="changeFont('Parisienne')">Parisienne</div>
-                <div class="font-option" style="font-family: 'Poppins', sans-serif" onclick="changeFont('Poppins')">Poppins</div>
-            </div>
-            <div class="color-picker-container" id="colorPicker">
-                <input type="color" id="bgColorPicker" value="#ffffff" onchange="changeBackgroundColor(this.value)">
-            </div>
-        </div>
+    <div class="font-options" id="fontOptions">
+        <div class="font-option" style="font-family: 'Playfair Display', serif">Playfair Display</div>
+        <div class="font-option" style="font-family: 'Dancing Script', cursive">Dancing Script</div>
+        <div class="font-option" style="font-family: 'Parisienne', cursive">Parisienne</div>
+        <div class="font-option" style="font-family: 'Poppins', sans-serif">Poppins</div>
+    </div>
+
+    <div class="color-picker-container" id="colorPicker">
+        <input type="color" id="bgColorPicker" value="#ffffff">
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize draggable elements
-    interact('.moodboard-item')
-        .draggable({
-            inertia: true,
-            modifiers: [
-                interact.modifiers.restrictRect({
-                    restriction: 'parent',
-                    endOnly: true
-                })
-            ],
-            autoScroll: true,
-            listeners: {
-                move: dragMoveListener,
-                start: function (event) {
-                    event.target.classList.add('dragging');
-                },
-                end: function (event) {
-                    event.target.classList.remove('dragging');
-                }
-            }
-        })
-        .resizable({
-            edges: { left: true, right: true, bottom: true, top: true },
-            restrictEdges: {
-                outer: 'parent',
-                endOnly: true
-            },
-            restrictSize: {
-                min: { width: 100, height: 100 }
-            },
-            inertia: true
-        })
-        .on('resizemove', function (event) {
-            let target = event.target;
-            let x = (parseFloat(target.getAttribute('data-x')) || 0);
-            let y = (parseFloat(target.getAttribute('data-y')) || 0);
+    const moodboardCanvas = document.getElementById('moodboardCanvas');
+    const canvasInstructions = document.getElementById('canvasInstructions');
+    const addImageBtn = document.getElementById('addImageBtn');
+    const addTextBtn = document.getElementById('addTextBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const uploadForm = document.getElementById('uploadForm');
+    const imageUpload = document.getElementById('imageUpload');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fontOptionsBtn = document.getElementById('fontOptionsBtn');
+    const colorPickerBtn = document.getElementById('colorPickerBtn');
+    const fontOptions = document.getElementById('fontOptions');
+    const colorPicker = document.getElementById('colorPicker');
+    const bgColorPicker = document.getElementById('bgColorPicker');
+    let currentFont = 'Playfair Display';
 
-            // Update element size
-            target.style.width = event.rect.width + 'px';
-            target.style.height = event.rect.height + 'px';
-
-            // Update position
-            x += event.deltaRect.left;
-            y += event.deltaRect.top;
-
-            target.style.transform = `translate(${x}px, ${y}px)`;
-            target.setAttribute('data-x', x);
-            target.setAttribute('data-y', y);
-        });
-
-    // Initialize rotation
-    interact('.rotate-handle').draggable({
-        onmove: function (event) {
-            const target = event.target.parentElement;
-            const rect = target.getBoundingClientRect();
-            const center = {
-                x: rect.left + rect.width / 2,
-                y: rect.top + rect.height / 2
+    // Handle file upload
+    imageUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                addImageToMoodboard(e.target.result);
+                uploadForm.classList.remove('active');
+                canvasInstructions.classList.add('hidden');
             };
-
-            const angle = Math.atan2(event.clientY - center.y, event.clientX - center.x);
-            const degrees = angle * 180 / Math.PI;
-
-            target.style.transform = `rotate(${degrees}deg)`;
+            reader.readAsDataURL(file);
         }
     });
 
-    // Color palette click handler
-    document.querySelectorAll('.color-swatch').forEach(swatch => {
-        swatch.addEventListener('click', function() {
-            const color = this.style.backgroundColor;
+    // Show upload form
+    addImageBtn.addEventListener('click', function() {
+        uploadForm.classList.add('active');
+    });
+
+    // Add text item
+    addTextBtn.addEventListener('click', function() {
+        const text = prompt('Enter your text:');
+        if (text) {
+            addTextToMoodboard(text);
+        }
+    });
+
+    // Save moodboard
+    saveBtn.addEventListener('click', function() {
+        // Implement save functionality
+        alert('Save functionality coming soon!');
+    });
+
+    // Drag and drop handling
+    moodboardCanvas.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        moodboardCanvas.classList.add('drag-over');
+    });
+
+    moodboardCanvas.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        moodboardCanvas.classList.remove('drag-over');
+    });
+
+    moodboardCanvas.addEventListener('drop', function(e) {
+        e.preventDefault();
+        moodboardCanvas.classList.remove('drag-over');
+        
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                addImageToMoodboard(e.target.result);
+                canvasInstructions.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Font options handling
+    fontOptionsBtn.addEventListener('click', function() {
+        colorPicker.style.display = 'none';
+        fontOptions.style.display = fontOptions.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.querySelectorAll('.font-option').forEach(option => {
+        option.addEventListener('click', function() {
+            currentFont = this.style.fontFamily;
             document.querySelectorAll('.text-item').forEach(text => {
-                text.style.color = color;
+                text.style.fontFamily = currentFont;
             });
+            fontOptions.style.display = 'none';
         });
     });
-});
 
-function dragMoveListener(event) {
-    let target = event.target;
-    let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-    let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-    target.style.transform = `translate(${x}px, ${y}px)`;
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
-}
-
-let currentFont = 'Playfair Display';
-
-function addText() {
-    const textItem = document.createElement('div');
-    textItem.className = 'text-item';
-    textItem.contentEditable = true;
-    textItem.style.fontFamily = currentFont;
-    textItem.style.color = '#ff69b4';
-    textItem.textContent = 'Double click to edit text';
-    
-    textItem.addEventListener('dblclick', function() {
-        this.contentEditable = true;
-        this.focus();
+    // Color picker handling
+    colorPickerBtn.addEventListener('click', function() {
+        fontOptions.style.display = 'none';
+        colorPicker.style.display = colorPicker.style.display === 'block' ? 'none' : 'block';
     });
 
-    textItem.addEventListener('blur', function() {
-        this.contentEditable = false;
+    bgColorPicker.addEventListener('input', function() {
+        moodboardCanvas.style.backgroundColor = this.value;
+        moodboardCanvas.style.backgroundImage = 'none';
     });
 
-    document.getElementById('moodboardCanvas').appendChild(textItem);
-    
-    // Make text items draggable
-    interact(textItem).draggable({
-        inertia: true,
-        modifiers: [
-            interact.modifiers.restrictRect({
-                restriction: 'parent',
-                endOnly: true
-            })
-        ],
-        autoScroll: true,
-        listeners: { move: dragMoveListener }
-    });
-}
-
-function toggleFontOptions() {
-    const options = document.getElementById('fontOptions');
-    options.style.display = options.style.display === 'block' ? 'none' : 'block';
-}
-
-function changeFont(font) {
-    currentFont = font;
-    document.querySelectorAll('.text-item').forEach(text => {
-        text.style.fontFamily = font;
-    });
-    document.getElementById('fontOptions').style.display = 'none';
-}
-
-function toggleColorPicker() {
-    const colorPicker = document.getElementById('colorPicker');
-    const fontOptions = document.getElementById('fontOptions');
-    fontOptions.style.display = 'none';
-    colorPicker.style.display = colorPicker.style.display === 'block' ? 'none' : 'block';
-}
-
-function changeBackgroundColor(color) {
-    const canvas = document.getElementById('moodboardCanvas');
-    canvas.style.backgroundColor = color;
-    canvas.style.backgroundImage = 'none';
-}
-
-function toggleUploadForm() {
-    const uploadForm = document.getElementById('uploadForm');
-    const fontOptions = document.getElementById('fontOptions');
-    const colorPicker = document.getElementById('colorPicker');
-    fontOptions.style.display = 'none';
-    colorPicker.style.display = 'none';
-    uploadForm.style.display = uploadForm.style.display === 'block' ? 'none' : 'block';
-}
-
-document.getElementById('additionalImages').addEventListener('change', function(e) {
-    const files = e.target.files;
-    const formData = new FormData();
-    
-    for (const file of files) {
-        formData.append('images', file);
+    function addImageToMoodboard(imageUrl) {
+        const moodboardItem = document.createElement('div');
+        moodboardItem.className = 'moodboard-item';
+        moodboardItem.style.width = '200px';
+        moodboardItem.style.left = '50%';
+        moodboardItem.style.top = '50%';
+        moodboardItem.style.transform = 'translate(-50%, -50%)';
+        
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = 'Moodboard image';
+        
+        const resizeHandles = ['tl', 'tr', 'bl', 'br'].map(pos => {
+            const handle = document.createElement('div');
+            handle.className = `resize-handle ${pos}`;
+            return handle;
+        });
+        
+        const rotateHandle = document.createElement('div');
+        rotateHandle.className = 'rotate-handle';
+        
+        moodboardItem.appendChild(img);
+        resizeHandles.forEach(handle => moodboardItem.appendChild(handle));
+        moodboardItem.appendChild(rotateHandle);
+        
+        moodboardCanvas.appendChild(moodboardItem);
+        
+        makeDraggable(moodboardItem);
     }
 
-    fetch('/add-images', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            data.images.forEach(image => {
-                const item = document.createElement('div');
-                item.className = 'moodboard-item';
-                item.style.width = '200px';
-                item.style.left = '50px';
-                item.style.top = '50px';
-                
-                const img = document.createElement('img');
-                img.src = `/uploads/${image}`;
-                img.alt = 'Moodboard image';
-                
-                const resizeHandles = ['tl', 'tr', 'bl', 'br'].map(pos => {
-                    const handle = document.createElement('div');
-                    handle.className = `resize-handle ${pos}`;
-                    return handle;
-                });
-                
-                const rotateHandle = document.createElement('div');
-                rotateHandle.className = 'rotate-handle';
-                
-                item.appendChild(img);
-                resizeHandles.forEach(handle => item.appendChild(handle));
-                item.appendChild(rotateHandle);
-                
-                document.getElementById('moodboardCanvas').appendChild(item);
-                
-                // Make the new item draggable and resizable
-                makeDraggable(item);
-            });
-            
-            document.getElementById('uploadForm').style.display = 'none';
-        }
-    });
-});
+    function addTextToMoodboard(text) {
+        const textItem = document.createElement('div');
+        textItem.className = 'text-item';
+        textItem.style.width = '200px';
+        textItem.style.left = '50%';
+        textItem.style.top = '50%';
+        textItem.style.transform = 'translate(-50%, -50%)';
+        textItem.style.fontFamily = currentFont;
+        textItem.style.color = '#ff69b4';
+        textItem.textContent = text;
+        
+        moodboardCanvas.appendChild(textItem);
+        makeDraggable(textItem);
+    }
 
-function makeDraggable(element) {
-    interact(element)
-        .draggable({
-            inertia: true,
-            modifiers: [
-                interact.modifiers.restrictRect({
-                    restriction: 'parent',
-                    endOnly: true
-                })
-            ],
-            autoScroll: true,
-            listeners: {
-                move: dragMoveListener,
-                start: function (event) {
-                    event.target.classList.add('dragging');
-                },
-                end: function (event) {
-                    event.target.classList.remove('dragging');
+    function makeDraggable(element) {
+        interact(element)
+            .draggable({
+                inertia: true,
+                modifiers: [
+                    interact.modifiers.restrictRect({
+                        restriction: 'parent',
+                        endOnly: true
+                    })
+                ],
+                autoScroll: true,
+                listeners: {
+                    move: dragMoveListener,
+                    start: function (event) {
+                        event.target.classList.add('dragging');
+                    },
+                    end: function (event) {
+                        event.target.classList.remove('dragging');
+                    }
                 }
-            }
-        })
-        .resizable({
-            edges: { left: true, right: true, bottom: true, top: true },
-            restrictEdges: {
-                outer: 'parent',
-                endOnly: true
-            },
-            restrictSize: {
-                min: { width: 100, height: 100 }
-            },
-            inertia: true
-        })
-        .on('resizemove', function (event) {
-            let target = event.target;
-            let x = (parseFloat(target.getAttribute('data-x')) || 0);
-            let y = (parseFloat(target.getAttribute('data-y')) || 0);
+            })
+            .resizable({
+                edges: { left: true, right: true, bottom: true, top: true },
+                restrictEdges: {
+                    outer: 'parent',
+                    endOnly: true
+                },
+                restrictSize: {
+                    min: { width: 100, height: 100 }
+                },
+                inertia: true
+            })
+            .on('resizemove', function (event) {
+                let target = event.target;
+                let x = (parseFloat(target.getAttribute('data-x')) || 0);
+                let y = (parseFloat(target.getAttribute('data-y')) || 0);
 
-            target.style.width = event.rect.width + 'px';
-            target.style.height = event.rect.height + 'px';
+                target.style.width = event.rect.width + 'px';
+                target.style.height = event.rect.height + 'px';
 
-            x += event.deltaRect.left;
-            y += event.deltaRect.top;
+                x += event.deltaRect.left;
+                y += event.deltaRect.top;
 
-            target.style.transform = `translate(${x}px, ${y}px)`;
-            target.setAttribute('data-x', x);
-            target.setAttribute('data-y', y);
-        });
-}
+                target.style.transform = `translate(${x}px, ${y}px)`;
+                target.setAttribute('data-x', x);
+                target.setAttribute('data-y', y);
+            });
+    }
+
+    function dragMoveListener(event) {
+        const target = event.target;
+        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+    }
+});
 </script>
 {% endblock %} 
