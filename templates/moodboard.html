@@ -300,6 +300,112 @@
     .font-option:hover {
         background-color: #fff5f7;
     }
+
+    .text-controls {
+        display: none;
+        position: fixed;
+        bottom: 100px;
+        right: 80px;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+    }
+
+    .text-controls.active {
+        display: block;
+    }
+
+    .text-controls button {
+        margin: 0.25rem;
+        padding: 0.5rem;
+        border: none;
+        background: none;
+        color: #ff69b4;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .text-controls button:hover {
+        transform: scale(1.1);
+    }
+
+    .text-controls .size-controls {
+        display: flex;
+        align-items: center;
+        margin: 0.5rem 0;
+    }
+
+    .text-controls .size-controls button {
+        font-size: 1.2rem;
+    }
+
+    .text-controls .alignment-controls {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+    }
+
+    .text-controls .action-controls {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+        border-top: 1px solid #eee;
+        padding-top: 0.5rem;
+    }
+
+    .text-item {
+        position: absolute;
+        padding: 1rem;
+        border-radius: 8px;
+        cursor: move;
+        user-select: none;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        min-width: 100px;
+        min-height: 50px;
+    }
+
+    .text-item.selected {
+        border: 2px solid #ff69b4;
+    }
+
+    .text-item.editing {
+        cursor: text;
+        user-select: text;
+    }
+
+    .image-controls {
+        display: none;
+        position: fixed;
+        bottom: 100px;
+        right: 80px;
+        background-color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+    }
+
+    .image-controls.active {
+        display: block;
+    }
+
+    .image-controls button {
+        margin: 0.25rem;
+        padding: 0.5rem;
+        border: none;
+        background: none;
+        color: #ff69b4;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .image-controls button:hover {
+        transform: scale(1.1);
+    }
 </style>
 {% endblock %}
 
@@ -353,6 +459,45 @@
     <div class="color-picker-container" id="colorPicker">
         <input type="color" id="bgColorPicker" value="#ffffff">
     </div>
+
+    <div class="text-controls" id="textControls">
+        <div class="size-controls">
+            <button id="decreaseSize" title="Decrease Text Size">
+                <i class="fas fa-minus"></i>
+            </button>
+            <span id="currentSize">16px</span>
+            <button id="increaseSize" title="Increase Text Size">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        <div class="alignment-controls">
+            <button id="alignLeft" title="Align Left">
+                <i class="fas fa-align-left"></i>
+            </button>
+            <button id="alignCenter" title="Align Center">
+                <i class="fas fa-align-center"></i>
+            </button>
+            <button id="alignRight" title="Align Right">
+                <i class="fas fa-align-right"></i>
+            </button>
+        </div>
+        <div class="action-controls">
+            <button id="editText" title="Edit Text">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button id="deleteText" title="Delete Text">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="image-controls" id="imageControls">
+        <div class="action-controls">
+            <button id="deleteImage" title="Delete Image">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -373,7 +518,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const fontOptions = document.getElementById('fontOptions');
     const colorPicker = document.getElementById('colorPicker');
     const bgColorPicker = document.getElementById('bgColorPicker');
+    const textControls = document.getElementById('textControls');
+    const decreaseSize = document.getElementById('decreaseSize');
+    const increaseSize = document.getElementById('increaseSize');
+    const currentSize = document.getElementById('currentSize');
+    const alignLeft = document.getElementById('alignLeft');
+    const alignCenter = document.getElementById('alignCenter');
+    const alignRight = document.getElementById('alignRight');
+    const editText = document.getElementById('editText');
+    const deleteText = document.getElementById('deleteText');
+    const imageControls = document.getElementById('imageControls');
+    const deleteImage = document.getElementById('deleteImage');
     let currentFont = 'Playfair Display';
+    let selectedTextItem = null;
+    let currentFontSize = 16;
+    let selectedImageItem = null;
 
     // Handle file upload
     imageUpload.addEventListener('change', function(e) {
@@ -486,8 +645,12 @@ document.addEventListener('DOMContentLoaded', function() {
         resizeHandles.forEach(handle => moodboardItem.appendChild(handle));
         moodboardItem.appendChild(rotateHandle);
         
-        moodboardCanvas.appendChild(moodboardItem);
+        moodboardItem.addEventListener('click', function(e) {
+            e.stopPropagation();
+            selectImageItem(this);
+        });
         
+        moodboardCanvas.appendChild(moodboardItem);
         makeDraggable(moodboardItem);
     }
 
@@ -500,11 +663,133 @@ document.addEventListener('DOMContentLoaded', function() {
         textItem.style.transform = 'translate(-50%, -50%)';
         textItem.style.fontFamily = currentFont;
         textItem.style.color = '#ff69b4';
+        textItem.style.fontSize = currentFontSize + 'px';
         textItem.textContent = text;
+        
+        textItem.addEventListener('click', function(e) {
+            e.stopPropagation();
+            selectTextItem(this);
+        });
         
         moodboardCanvas.appendChild(textItem);
         makeDraggable(textItem);
+        selectTextItem(textItem);
     }
+
+    function selectTextItem(item) {
+        if (selectedTextItem) {
+            selectedTextItem.classList.remove('selected');
+        }
+        selectedTextItem = item;
+        selectedTextItem.classList.add('selected');
+        textControls.classList.add('active');
+        currentFontSize = parseInt(window.getComputedStyle(selectedTextItem).fontSize);
+        currentSize.textContent = currentFontSize + 'px';
+    }
+
+    // Text size controls
+    decreaseSize.addEventListener('click', function() {
+        if (selectedTextItem && currentFontSize > 8) {
+            currentFontSize -= 2;
+            selectedTextItem.style.fontSize = currentFontSize + 'px';
+            currentSize.textContent = currentFontSize + 'px';
+        }
+    });
+
+    increaseSize.addEventListener('click', function() {
+        if (selectedTextItem && currentFontSize < 72) {
+            currentFontSize += 2;
+            selectedTextItem.style.fontSize = currentFontSize + 'px';
+            currentSize.textContent = currentFontSize + 'px';
+        }
+    });
+
+    // Text alignment controls
+    alignLeft.addEventListener('click', function() {
+        if (selectedTextItem) {
+            selectedTextItem.style.textAlign = 'left';
+        }
+    });
+
+    alignCenter.addEventListener('click', function() {
+        if (selectedTextItem) {
+            selectedTextItem.style.textAlign = 'center';
+        }
+    });
+
+    alignRight.addEventListener('click', function() {
+        if (selectedTextItem) {
+            selectedTextItem.style.textAlign = 'right';
+        }
+    });
+
+    // Edit text functionality
+    editText.addEventListener('click', function() {
+        if (selectedTextItem) {
+            selectedTextItem.classList.add('editing');
+            selectedTextItem.contentEditable = true;
+            selectedTextItem.focus();
+        }
+    });
+
+    // Delete text functionality
+    deleteText.addEventListener('click', function() {
+        if (selectedTextItem) {
+            if (confirm('Are you sure you want to delete this text?')) {
+                selectedTextItem.remove();
+                selectedTextItem = null;
+                textControls.classList.remove('active');
+            }
+        }
+    });
+
+    // Handle text editing completion
+    moodboardCanvas.addEventListener('blur', function(e) {
+        if (selectedTextItem && selectedTextItem.classList.contains('editing')) {
+            selectedTextItem.classList.remove('editing');
+            selectedTextItem.contentEditable = false;
+        }
+    }, true);
+
+    function selectImageItem(item) {
+        if (selectedImageItem) {
+            selectedImageItem.classList.remove('selected');
+        }
+        if (selectedTextItem) {
+            selectedTextItem.classList.remove('selected');
+            textControls.classList.remove('active');
+        }
+        selectedImageItem = item;
+        selectedImageItem.classList.add('selected');
+        imageControls.classList.add('active');
+    }
+
+    // Delete image functionality
+    deleteImage.addEventListener('click', function() {
+        if (selectedImageItem) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                selectedImageItem.remove();
+                selectedImageItem = null;
+                imageControls.classList.remove('active');
+            }
+        }
+    });
+
+    // Deselect items when clicking outside
+    moodboardCanvas.addEventListener('click', function(e) {
+        if (e.target === moodboardCanvas) {
+            if (selectedImageItem) {
+                selectedImageItem.classList.remove('selected');
+                selectedImageItem = null;
+                imageControls.classList.remove('active');
+            }
+            if (selectedTextItem) {
+                selectedTextItem.classList.remove('selected');
+                selectedTextItem = null;
+                textControls.classList.remove('active');
+            }
+        }
+    });
 
     function makeDraggable(element) {
         interact(element)
