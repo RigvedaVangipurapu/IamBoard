@@ -120,6 +120,38 @@
         color: #ff69b4;
         font-weight: 500;
     }
+
+    .text-templates {
+        margin-top: 15px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .text-templates h3 {
+        margin-bottom: 10px;
+        color: #333;
+        font-size: 1.1em;
+    }
+
+    .template-options {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .template-btn {
+        padding: 8px 15px;
+        background-color: #e9ecef;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .template-btn:hover {
+        background-color: #dee2e6;
+    }
 </style>
 {% endblock %}
 
@@ -138,9 +170,18 @@
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="4" required></textarea>
+                        <div class="text-templates">
+                            <h3>Sample Descriptions</h3>
+                            <div class="template-options">
+                                <button type="button" class="template-btn" data-template="minimalist">Minimalist Design</button>
+                                <button type="button" class="template-btn" data-template="vibrant">Vibrant Colors</button>
+                                <button type="button" class="template-btn" data-template="natural">Natural Elements</button>
+                                <button type="button" class="template-btn" data-template="urban">Urban Style</button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-4">
@@ -245,6 +286,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateFileList() {
         fileInput.files = currentFiles.files;
     }
+
+    // Add template selection functionality
+    document.querySelectorAll('.template-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const templates = {
+                minimalist: "A clean, minimalist design board focusing on whitespace, simple shapes, and monochromatic color schemes. Perfect for modern, elegant projects.",
+                vibrant: "A vibrant moodboard showcasing bold colors, dynamic patterns, and energetic compositions. Ideal for projects that need to make a strong visual impact.",
+                natural: "A nature-inspired moodboard featuring organic textures, earthy tones, and sustainable design elements. Great for eco-friendly and wellness projects.",
+                urban: "An urban-themed moodboard highlighting architectural elements, industrial textures, and contemporary city aesthetics. Perfect for modern, metropolitan projects."
+            };
+            document.getElementById('description').value = templates[button.dataset.template];
+        });
+    });
 });
 </script>
 {% endblock %} 
